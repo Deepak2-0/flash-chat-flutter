@@ -18,7 +18,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Hero(
-              tag:'appLogo',
+              tag: 'appLogo',
               child: Container(
                 height: 200.0,
                 child: Image.asset('images/logo.png'),
