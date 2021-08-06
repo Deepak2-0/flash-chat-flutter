@@ -17,7 +17,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     super.initState();
 
     controller = AnimationController(
-        vsync: this, duration: Duration(seconds: 1), upperBound: 100);
+        vsync: this, duration: Duration(seconds: 1), upperBound: 60);
 
     controller.forward();
 
@@ -48,11 +48,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   tag: 'appLogo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: 60.0,
+                    height: controller.value,
                   ),
                 ),
                 Text(
-                  '${(controller.value).toInt()}%',
+                  'Flash Chat',
                   style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
