@@ -23,17 +23,33 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
 
     animation = CurvedAnimation(parent: controller, curve: Curves.ease);
-    //controller.forward();
-    controller.reverse(from: 1.0);
+    controller.forward();
+    //controller.reverse(from: 1.0);
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.dismissed) {
+        controller.forward();
+      } else if (status == AnimationStatus.completed) {
+        controller.reverse(from: 1.0);
+      }
+    });
+
     controller.addListener(
       () {
-        print(animation.value);
+        //print(animation.value);
         setState(() {});
         //Empty SetState is written so that we can use the controller.value in
         // various place with changing controller.value flutter need to know so that it can rebuild the ui
         //i.e we have put empty setState
       },
     );
+  }
+
+  //Disposing the controller as if not disposed then even we do the page change the aniamtion will
+  //run in the background
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 
   @override
