@@ -11,19 +11,23 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
+  Animation animation;
 
   @override
   void initState() {
     super.initState();
 
     controller = AnimationController(
-        vsync: this, duration: Duration(seconds: 1), upperBound: 60);
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
 
+    animation = CurvedAnimation(parent: controller, curve: Curves.ease);
     controller.forward();
 
     controller.addListener(
       () {
-        print(controller.value);
+        print(animation.value);
         setState(() {});
         //Empty SetState is written so that we can use the controller.value in
         // various place with changing controller.value flutter need to know so that it can rebuild the ui
@@ -48,7 +52,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   tag: 'appLogo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: controller.value,
+                    height: controller.value * 60,
                   ),
                 ),
                 Text(
