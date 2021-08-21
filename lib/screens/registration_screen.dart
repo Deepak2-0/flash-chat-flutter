@@ -1,6 +1,7 @@
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String url = "/register_screen";
@@ -30,6 +31,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 48.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
                 //Do something with the user input.
               },
@@ -40,6 +43,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
               onChanged: (value) {
                 //Do something with the user input.
               },
