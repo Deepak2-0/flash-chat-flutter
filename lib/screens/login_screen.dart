@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
+
+import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String url = "/login_screen";
@@ -9,6 +12,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String email;
+  String password;
+
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
-                //Do something with the user input.
+                email = value;
               },
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter a email"),
@@ -45,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter a password"),
@@ -57,8 +65,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: UniqueKey(),
                 buttonColor: Colors.lightBlueAccent,
                 title: "Log In",
-                handleOnPressed: () {
-                  print("INSIDE LOGIN");
+                handleOnPressed: () async {
+                  try {
+                    print('email password $email $password');
+                    final user = await _auth.signInWithEmailAndPassword(
+                        email: email, password: password);
+                    print('######user $user');
+                    if (user != null) {
+                      Navigator.pushNamed(context, ChatScreen.url);
+                    }
+                  } catch (e) {
+                    print(e);
+                  }
                 }),
           ],
         ),

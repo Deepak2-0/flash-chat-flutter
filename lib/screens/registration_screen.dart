@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import 'chat_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String url = "/register_screen";
@@ -10,6 +13,11 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  String email;
+  String password;
+
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +42,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
-                //Do something with the user input.
+                email = value;
               },
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter your email"),
@@ -46,7 +54,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               textAlign: TextAlign.center,
               obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                   hintText: "Enter your password"),
@@ -58,8 +66,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 key: UniqueKey(),
                 buttonColor: Colors.blueAccent,
                 title: "Register",
-                handleOnPressed: () {
-                  print("INSIDE REGISTER");
+                handleOnPressed: () async {
+                  try {
+                    final user = await _auth.createUserWithEmailAndPassword(
+                        email: email, password: password);
+
+                    if (user != null) {
+                      Navigator.pushNamed(context, ChatScreen.url);
+                    }
+                  } catch (e) {
+                    print(e);
+                  }
                 }),
           ],
         ),
