@@ -67,10 +67,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 title: "Log In",
                 handleOnPressed: () async {
                   try {
-                    print('email password $email $password');
                     final user = await _auth.signInWithEmailAndPassword(
                         email: email, password: password);
-                    print('######user $user');
                     if (user != null) {
                       Navigator.pushNamed(context, ChatScreen.url);
                     }
