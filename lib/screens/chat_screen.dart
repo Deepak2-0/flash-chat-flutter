@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/constants.dart';
+import 'package:flash_chat/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -59,16 +60,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 } else {
                   final messages = snapshot.data.docs;
 
-                  List<Text> messageWidget = [];
+                  List<MessageBubble> messageWidget = [];
                   for (var message in messages) {
                     String sender = message.get('sender');
                     String textMessage = message.get('textMessage');
                     //print('##### ${message.data()}');
                     messageWidget.add(
-                      Text(
-                        '$textMessage from $sender',
-                        style: TextStyle(fontSize: 50),
-                      ),
+                      MessageBubble(message: textMessage, sender: sender),
                     );
                   }
 
@@ -113,11 +111,4 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-}
-
-class MessageUser {
-  String sender;
-  String textMessages;
-
-  MessageUser(this.sender, this.textMessages);
 }
