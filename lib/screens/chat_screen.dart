@@ -5,6 +5,7 @@ import 'package:flash_chat/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
 
 final _fireStore = FirebaseFirestore.instance;
+User loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static const String url = "/chat_screen";
@@ -14,7 +15,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
-  User loggedInUser;
 
   String textMessage;
 
@@ -108,8 +108,10 @@ class MessageStream extends StatelessWidget {
           for (var message in messages) {
             String sender = message.get('sender');
             String textMessage = message.get('textMessage');
+            print("#### $loggedInUser");
+            final isMe = loggedInUser.email == sender;
             messageWidget.add(
-              MessageBubble(message: textMessage, sender: sender),
+              MessageBubble(message: textMessage, sender: sender, isMe: isMe),
             );
           }
           return Expanded(
