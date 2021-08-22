@@ -102,13 +102,13 @@ class MessageStream extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text("Something went wrong, Please try again later");
         } else {
-          final messages = snapshot.data.docs;
+          final messages = snapshot.data.docs.reversed;
 
           List<MessageBubble> messageWidget = [];
           for (var message in messages) {
             String sender = message.get('sender');
             String textMessage = message.get('textMessage');
-            print("#### $loggedInUser");
+            //print("#### $loggedInUser");
             final isMe = loggedInUser.email == sender;
             messageWidget.add(
               MessageBubble(message: textMessage, sender: sender, isMe: isMe),
@@ -116,6 +116,7 @@ class MessageStream extends StatelessWidget {
           }
           return Expanded(
             child: ListView(
+              reverse: true,
               children: messageWidget,
             ),
           );
