@@ -18,6 +18,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String textMessage;
 
+  TextEditingController messageController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageController,
                       onChanged: (value) {
                         textMessage = value;
                       },
@@ -69,6 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         "sender": loggedInUser.email,
                         "textMessage": textMessage,
                       });
+                      messageController.clear();
                     },
                     child: Text(
                       'Send',
