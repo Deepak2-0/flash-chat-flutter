@@ -20,7 +20,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     loggedInUser = _auth.currentUser;
-    print('####loggedInUser $loggedInUser @@@@@@ ${loggedInUser.email}');
+    //print('####loggedInUser $loggedInUser @@@@@@ ${loggedInUser.email}');
+    //getMessages();
   }
 
   @override
@@ -48,6 +49,37 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+              stream: _fireStore.collection('messages').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text("Something went wrong, Please try again later");
+                } else {
+                  final messages = snapshot.data.docs;
+
+                  List<Text> messageWidget = [];
+                  for (var message in messages) {
+                    String sender = message.get('sender');
+                    String textMessage = message.get('textMessage');
+                    //print('##### ${message.data()}');
+                    messageWidget.add(
+                      Text(
+                        '$textMessage from $sender',
+                        style: TextStyle(fontSize: 50),
+                      ),
+                    );
+                  }
+
+                  return Expanded(
+                    child: ListView(
+                      children: messageWidget,
+                    ),
+                  );
+                }
+              },
+            ),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -81,4 +113,11 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+
+class MessageUser {
+  String sender;
+  String textMessages;
+
+  MessageUser(this.sender, this.textMessages);
 }
