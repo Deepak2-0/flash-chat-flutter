@@ -4,6 +4,8 @@ import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
 
+final _fireStore = FirebaseFirestore.instance;
+
 class ChatScreen extends StatefulWidget {
   static const String url = "/chat_screen";
   @override
@@ -14,15 +16,12 @@ class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
   User loggedInUser;
 
-  final _fireStore = FirebaseFirestore.instance;
   String textMessage;
 
   @override
   void initState() {
     super.initState();
     loggedInUser = _auth.currentUser;
-    //print('####loggedInUser $loggedInUser @@@@@@ ${loggedInUser.email}');
-    //getMessages();
   }
 
   @override
@@ -50,34 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: _fireStore.collection('messages').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text("Something went wrong, Please try again later");
-                } else {
-                  final messages = snapshot.data.docs;
-
-                  List<MessageBubble> messageWidget = [];
-                  for (var message in messages) {
-                    String sender = message.get('sender');
-                    String textMessage = message.get('textMessage');
-                    //print('##### ${message.data()}');
-                    messageWidget.add(
-                      MessageBubble(message: textMessage, sender: sender),
-                    );
-                  }
-
-                  return Expanded(
-                    child: ListView(
-                      children: messageWidget,
-                    ),
-                  );
-                }
-              },
-            ),
+            MessageStream(),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -109,6 +81,40 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MessageStream extends StatelessWidget {
+  const MessageStream({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _fireStore.collection('messages').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text("Something went wrong, Please try again later");
+        } else {
+          final messages = snapshot.data.docs;
+
+          List<MessageBubble> messageWidget = [];
+          for (var message in messages) {
+            String sender = message.get('sender');
+            String textMessage = message.get('textMessage');
+            messageWidget.add(
+              MessageBubble(message: textMessage, sender: sender),
+            );
+          }
+          return Expanded(
+            child: ListView(
+              children: messageWidget,
+            ),
+          );
+        }
+      },
     );
   }
 }
